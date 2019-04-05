@@ -6,7 +6,7 @@ const http = require('http');
 const router = require('./routes/index');
 
 
-var app = express();
+const app = express();
 
 
 app.use(bodyParser.json());
@@ -39,7 +39,6 @@ var server = http.createServer(app);
 const io = socketIO(server);
 
 //import a socket and replace the (socket) with that
-
 
 //Listener example
 io.on('connection', (socket) => {

@@ -1,10 +1,10 @@
 # Backend API
-MongoDB passward is not include. To run the program locally get password and add to config->db.js->paste in the password field
+MongoDB passward is not included. To run the program locally get password and add to config->db.js->paste in the password field
 
 
 ## Run
 Clone the project then do `npm i`
-Then do `npm start`
+then do `npm start` to run the server.
 
 ## REST API List
 
