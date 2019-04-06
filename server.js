@@ -4,37 +4,11 @@ const bodyParser = require("body-parser");
 const socketIO = require('socket.io');
 const http = require('http');
 const router = require('./routes/index');
-var swaggerJSDoc = require('swagger-jsdoc');
+const swagger = require('./swagger');
 
 
 const app = express();
 app.use(express.static(__dirname + '/public'));
-
-// swagger definition
-var swaggerDefinition = {
-  info: {
-    title: 'Comingoo REST API List',
-    version: '1.0.0',
-    description: 'Here is the total list of APIs for COMINGOO app development',
-  },
-  host: 'localhost:3030',
-  basePath: '/',
-};
-// options for the swagger docs
-var options = {
-  // import swaggerDefinitions
-  swaggerDefinition: swaggerDefinition,
-  // path to the API docs
-  apis: ['./**/routes/*.js','routes.js'],// pass all in array 
-  };
-// initialize swagger-jsdoc
-var swaggerSpec = swaggerJSDoc(options);
-app.get('/swagger.json', function(req, res) {  
-   res.setHeader('Content-Type', 'application/json');   
-   res.send(swaggerSpec); 
-  });
-
-
 
 
 app.use(bodyParser.json());
@@ -49,7 +23,7 @@ db.once('open', function () {
     console.log("db connected!")
 });
 
-
+new swagger(app) ;
 
 //default port 3030
 const PORT = process.env.PORT || 3030 ;
