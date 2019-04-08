@@ -23,4 +23,11 @@ then do `npm start` to run the server.
 5. https://comingoo.herokuapp.com/riders/registerRider
 6. https://comingoo.herokuapp.com/riders/loginDriver
 
+# SWAGGER API DOCUMENTATION
+
+### Installation Process 
+1. Run `npm npm install swagger-jsdoc --save` to install swagger-jsdoc
+2. Run `node server.js` to start server if server is off
+3. Go to `http://127.0.0.1:3030/api-docs/` which will show API documentation view
+4. To create documentation for API, open `index.js` in routes folder. At the top, create model definition and API information with path. You find example there.  
 
