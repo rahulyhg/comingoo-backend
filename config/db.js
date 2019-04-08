@@ -21,5 +21,6 @@ const options = {
 
 mongoose.connect(mongoDB, options);
 mongoose.Promise = global.Promise;
+mongoose.set('useCreateIndex', true);
 
 module.exports = mongoose;

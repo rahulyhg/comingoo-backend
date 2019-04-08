@@ -3,43 +3,77 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const hashPassword = require('../../helpers/passwordHashing');
-
-
-//POST ADD NEW USER
-router.post('/addDriver', async (req, res) => {
-    try {
-        const user = new DriverModel(req.body);
-
-        await user.save();
-        res.status(201).send({ message: "User successfully inserted!" })
-    } catch (e) {
-        res.status(500).send({ message: e.message })
-    }
-})
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Types.ObjectId;
 
 
 //POST REGISTER
 router.post('/registerDriver', async (req, res) => {
 
-    const checkUser = await DriverModel.find({ email: req.body.email });
-    if (checkUser.length) {
-        res.status(404).send({ message: "User already exists!" });
+    const checkUserbyPhone = await DriverModel.find({ email: req.body.phoneNumber });
+    const checkUserbyLicensePlateNumber = await DriverModel.find({  licensePlateNumber: req.body.licensePlateNumber  });
+    if (checkUserbyPhone.length || checkUserbyLicensePlateNumber.length ) {
+        res.status(409).send({ message: "Phone number or license plate number already exists!" });
         return;
     }
 
 
     const user = req.body;
-    const hash = hashPassword(user.password);
 
-    const newUser = new DriverModel({ name: user.name, email: user.email, password: hash });
-    try {
-        await newUser.save();
-        res.status(201).send({ message: "User registered successfully!" });
-    } catch (e) {
-        res.status(500).send({ message: e.message });
-    }
+    bcrypt.hash(user.password, 10)
+    .then(function(hash) {
+
+        const newUser = new DriverModel({ 
+            phoneNumber: user.phoneNumber, 
+            fullName: user.fullName, 
+            gender: user.gender,
+            password: hash,
+            city: user.city,
+            bankAccountNumber: user.bankAccountNumber,
+            BankName: user.BankName,
+            carBrand: user.carBrand,
+            carModel: user.carModel,
+            carColor: user.carColor,
+            yearOfRelease: user.yearOfRelease,
+            licensePlateNumber: user.licensePlateNumber,
+            identityCardImageFrontURL: user.identityCardImageFrontURL,
+            identityCardImageBackURL: user.identityCardImageBackURL,
+            drivingLicenseImageFrontURL: user.drivingLicenseImageFrontURL,
+            drivingLicenseImageBackURL: user.drivingLicenseImageBackURL
+    
+        
+    
+         });
+        try {
+            newUser.save()
+            .then(response =>{
+    
+                console.log(response)
+                res.status(201).send({
+                     message: "User registered successfully!",
+                    });
+                })
+    
+             
+            .catch(err =>{
+    
+                res.status(500).send({ message: err.message });
+                
+            });
+            
+        
+        } catch (e) {
+            res.status(500).send({ message: e.message });
+        }
+    })
+    .catch(error => {
+           res.status(500).send({ message: error });
+    })
+
 })
+
+
+
 
 
 //POST LOGIN DRIVER
@@ -74,7 +108,21 @@ router.get('/getAlldriver', async (req, res) => {
     } catch (e) {
         res.status(500).send({ message: e.message });
     }
-})
+});
+
+
+//DELETE
+router.delete('/:id', function(req,res){ 
+
+    var id = req.params.id;
+
+    DriverModel.remove({_id: ObjectId(id)}, function(err, result){ //undefined??
+        if (err) return res.status(500).send({err: 'Error: Could not delete driver'});
+        if(!result) return res.status(400).send({err: 'driver deleted from database'});
+        res.send(result); 
+    });
+});
+
 
 
 module.exports = router;
