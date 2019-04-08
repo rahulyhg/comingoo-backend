@@ -3,25 +3,27 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-var mongoose = require('mongoose');
-var ObjectId = mongoose.Types.ObjectId;
+const mongoose = require('mongoose');
+
+
+const saltRounds = 10;
+const ObjectId = mongoose.Types.ObjectId;
 
 
 //POST REGISTER
 router.post('/registerDriver', async (req, res) => {
 
-    const checkUserbyPhone = await DriverModel.find({ email: req.body.phoneNumber });
-    const checkUserbyLicensePlateNumber = await DriverModel.find({  licensePlateNumber: req.body.licensePlateNumber  });
-    if (checkUserbyPhone.length || checkUserbyLicensePlateNumber.length ) {
-        res.status(409).send({ message: "Phone number or license plate number already exists!" });
+    const checkUser = await DriverModel.find(  { $or:[ { email: req.body.phoneNumber}, {  licensePlateNumber: req.body.licensePlateNumber  } ]});  
+    if (checkUser.length) {
+        res.status(409).send({ message: "Phone number or license plate number already exists!" }); //Conflict
         return;
     }
 
 
     const user = req.body;
 
-    bcrypt.hash(user.password, 10)
-    .then(function(hash) {
+    bcrypt.hash(user.password, saltRounds)   //Asyn password hashing
+    .then(hash => {
 
         const newUser = new DriverModel({ 
             phoneNumber: user.phoneNumber, 
@@ -51,23 +53,20 @@ router.post('/registerDriver', async (req, res) => {
                 console.log(response)
                 res.status(201).send({
                      message: "User registered successfully!",
-                    });
+                    });   //Created
                 })
-    
-             
+     
             .catch(err =>{
     
-                res.status(500).send({ message: err.message });
+                res.status(500).send({ message: err.message }); //Internal Server Error Database
                 
-            });
-            
-        
-        } catch (e) {
-            res.status(500).send({ message: e.message });
+            });  
+        }catch (e) {
+            res.status(500).send({ message: e.message }); //Internal Server Error
         }
     })
     .catch(error => {
-           res.status(500).send({ message: error });
+           res.status(500).send({ message: error }); //Internal Server Error hashing passwaord
     })
 
 })
@@ -76,29 +75,76 @@ router.post('/registerDriver', async (req, res) => {
 
 
 
-//POST LOGIN DRIVER
+//POST LOGIN DRIVER ( RECEIVES PHONENUMBER AND PASSWOARD IN THE BODY)
 router.post('/loginDriver', async (req, res) => {
-    //Check Email
-    const user = await DriverModel.find({ email: req.body.email });
+    //Check Phone
+    const user = await DriverModel.findOne({ phoneNumber: req.body.phoneNumber });
 
-    if (!user.length) {
+    if (user == null) {
         res.status(404).send({ message: "User not found!" });
         return;
     }
 
-    const passwordMatched = bcrypt.compareSync(req.body.password, user[0].password);
+    const passwordMatched = bcrypt.compareSync(req.body.password, user.password);
 
     if (!passwordMatched) {
-        res.status(404).send({ message: "Incorrect Email/Password!" });
+        res.status(401).send({ message: "Incorrect Email/Password!" }); // Unauthorized
         return;
     }
 
-    //Generate Token
-    const token = jwt.sign({ user: user[0] }, 'anySecretKey');
-    res.status(200).send({ token });
+    //Generate Token and returning full user has vulnerability issues that it can be decoded
+    const token = jwt.sign({ user: user }, 'anySecretKey');
+
+
+    DriverModel.findOneAndUpdate({
+        phoneNumber: req.body.phoneNumber},{ 
+        $set:{updatedAt: Date.now() , lastLoginAt: Date.now() , token: token  }}, 
+        { multi: true , new: true},
+        (err, doc) => {
+
+        if (err) {
+
+            res.status(500).send({ message: err.message }); //Internal Server Error
+        }
+
+        var driver = {
+            phoneNumber: doc.phoneNumber, 
+            fullName: doc.fullName, 
+            gender: doc.gender,
+            city: doc.city,
+            bankAccountNumber: doc.bankAccountNumber,
+            BankName: doc.BankName,
+            carBrand: doc.carBrand,
+            carModel: doc.carModel,
+            carColor: doc.carColor,
+            yearOfRelease: doc.yearOfRelease,
+            licensePlateNumber: doc.licensePlateNumber,
+            identityCardImageFrontURL: doc.identityCardImageFrontURL,
+            identityCardImageBackURL: doc.identityCardImageBackURL,
+            drivingLicenseImageFrontURL: doc.drivingLicenseImageFrontURL,
+            drivingLicenseImageBackURL: doc.drivingLicenseImageBackURL,
+            createdAt: doc.createdAt,
+            updatedAt: doc.updatedAt,
+            lastLoginAt: doc.lastLoginAt,
+            token: doc.token
+
+            
+
+
+        }
+
+        res.status(202).send({ driver }); //Login Accepted
+    })
+    .catch(e => {
+
+        res.status(500).send({ message: e.message }); //Internal Server Error
+    })
+    
 })
 
 
+
+//------------------------------------------------------------------------------------------------------------------------
 
 //GET ALL DRIVERS
 router.get('/getAlldriver', async (req, res) => {

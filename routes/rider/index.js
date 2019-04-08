@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const hashPassword = require('../../helpers/passwordHashing');
 
 
 
@@ -34,7 +33,8 @@ router.post('/registerRider', async (req, res) => {
 
 
   const user = req.body;
-  const hash = hashPassword(user.password);
+  //const hash = hashPassword(user.password);
+  const hash = "dummy";
 
   const newUser = new RiderModel({ name: user.name, email: user.email, password: hash });
   try {

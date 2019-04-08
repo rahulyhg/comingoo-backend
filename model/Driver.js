@@ -69,16 +69,20 @@ const DriverSchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now(),
+        default: Date.now,
     },
     updatedAt: {
         type: Date,
-        default: Date.now(),
+        default: Date.now,
     },
     lastLoginAt: {
         type: Date,
-        default: Date.now(),
+        default: Date.now,
         
+    },
+    token: {
+        type: String,
+        default: null
     }
     
 
