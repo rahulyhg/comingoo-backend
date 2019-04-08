@@ -11,6 +11,7 @@ const dev_db_url = `mongodb+srv://${username}:${password}@${server}/${database}?
 
 
 
+
 const mongoDB = process.env.MONGODB_URI || dev_db_url;
 
 const options = {
@@ -21,5 +22,7 @@ const options = {
 
 mongoose.connect(mongoDB, options);
 mongoose.Promise = global.Promise;
+mongoose.set('useCreateIndex', true);
+mongoose.set('useFindAndModify', false);
 
 module.exports = mongoose;
