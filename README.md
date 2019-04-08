@@ -23,8 +23,7 @@ then do `npm start` to run the server.
 5. https://comingoo.herokuapp.com/riders/registerRider
 6. https://comingoo.herokuapp.com/riders/loginDriver
 
-# SWAGGER API DOCUMENTATION
-
+# Swagger API Documentation
 ### Installation Process 
 1. Run `npm npm install swagger-jsdoc --save` to install swagger-jsdoc
 2. Run `node server.js` to start server if server is off
