@@ -114,7 +114,7 @@ router.post('/loginDriver', async (req, res) => {
             res.status(500).send({ message: err.message }); //Internal Server Error
         }
 
-        var driver = {
+        res.status(202).send({ 
             phoneNumber: doc.phoneNumber, 
             fullName: doc.fullName, 
             gender: doc.gender,
@@ -143,16 +143,14 @@ router.post('/loginDriver', async (req, res) => {
             updatedAt: doc.updatedAt,
             lastLoginAt: doc.lastLoginAt,
             token: doc.token
-
-        }
-
-        res.status(202).send({ driver }); //Login Accepted
+         }); //Login Accepted
     })
     .catch(e => {
         res.status(500).send({ message: e.message }); //Internal Server Error
     })
     
 })
+
 
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -174,8 +172,8 @@ router.delete('/:id', function(req,res){
     var id = req.params.id;
 
     DriverModel.remove({_id: ObjectId(id)}, function(err, result){ //undefined??
-        if (err) return res.status(500).send({err: 'Error: Could not delete driver model'});
-        if(!result) return res.status(401).send({err: 'driver deleted from database successfully'});
+        if (err) return res.status(500).send({err: 'Error: Could not delete driver'});
+        if(!result) return res.status(400).send({err: 'driver deleted from database'});
         res.send(result); 
     });
 });
