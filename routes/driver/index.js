@@ -174,8 +174,8 @@ router.delete('/:id', function(req,res){
     var id = req.params.id;
 
     DriverModel.remove({_id: ObjectId(id)}, function(err, result){ //undefined??
-        if (err) return res.status(500).send({err: 'Error: Could not delete driver'});
-        if(!result) return res.status(400).send({err: 'driver deleted from database'});
+        if (err) return res.status(500).send({err: 'Error: Could not delete driver model'});
+        if(!result) return res.status(401).send({err: 'driver deleted from database successfully'});
         res.send(result); 
     });
 });
