@@ -13,7 +13,7 @@ const ObjectId = mongoose.Types.ObjectId;
 //POST REGISTER
 router.post('/registerDriver', async (req, res) => {
 
-    const checkUser = await DriverModel.find(  { $or:[ { email: req.body.phoneNumber}, {  licensePlateNumber: req.body.licensePlateNumber  } ]});  
+    const checkUser = await DriverModel.find(  { $or:[ { email: req.body.phoneNumber}, {  'car.licensePlateNumber': req.body.car.licensePlateNumber  } ]});  
     if (checkUser.length) {
         res.status(409).send({ message: "Phone number or license plate number already exists!" }); //Conflict
         return;
@@ -31,19 +31,26 @@ router.post('/registerDriver', async (req, res) => {
             gender: user.gender,
             password: hash,
             city: user.city,
-            bankAccountNumber: user.bankAccountNumber,
-            BankName: user.BankName,
-            carBrand: user.carBrand,
-            carModel: user.carModel,
-            carColor: user.carColor,
-            yearOfRelease: user.yearOfRelease,
-            licensePlateNumber: user.licensePlateNumber,
-            identityCardImageFrontURL: user.identityCardImageFrontURL,
-            identityCardImageBackURL: user.identityCardImageBackURL,
-            drivingLicenseImageFrontURL: user.drivingLicenseImageFrontURL,
-            drivingLicenseImageBackURL: user.drivingLicenseImageBackURL
-    
-        
+            bank:{
+                name: user.bank.name,
+                accountNumber: user.bank.accountNumber,
+            },
+            car:{
+                brand: user.car.brand,
+                model: user.car.model,
+                color: user.car.color,
+                yearOfRelease: user.car.yearOfRelease,
+                licensePlateNumber: user.car.licensePlateNumber,
+            },
+            idCardImages:{
+                frontUrl: user.idCardImages.frontUrl,
+                backUrl: user.idCardImages.backUrl,
+            },
+            drivingLicenseImages:{
+                frontUrl: user.drivingLicenseImages.frontUrl,
+                backUrl: user.drivingLicenseImages.backUrl,
+
+            }
     
          });
         try {
@@ -112,31 +119,36 @@ router.post('/loginDriver', async (req, res) => {
             fullName: doc.fullName, 
             gender: doc.gender,
             city: doc.city,
-            bankAccountNumber: doc.bankAccountNumber,
-            BankName: doc.BankName,
-            carBrand: doc.carBrand,
-            carModel: doc.carModel,
-            carColor: doc.carColor,
-            yearOfRelease: doc.yearOfRelease,
-            licensePlateNumber: doc.licensePlateNumber,
-            identityCardImageFrontURL: doc.identityCardImageFrontURL,
-            identityCardImageBackURL: doc.identityCardImageBackURL,
-            drivingLicenseImageFrontURL: doc.drivingLicenseImageFrontURL,
-            drivingLicenseImageBackURL: doc.drivingLicenseImageBackURL,
+            bank:{
+                name: doc.bank.name,
+                accountNumber: doc.bank.accountNumber,
+            },
+            car:{
+                brand: doc.car.brand,
+                model: doc.car.model,
+                color: doc.car.color,
+                yearOfRelease: doc.car.yearOfRelease,
+                licensePlateNumber: doc.car.licensePlateNumber,
+            },
+            idCardImages:{
+                frontUrl: doc.idCardImages.frontUrl,
+                backUrl: doc.idCardImages.backUrl,
+            },
+            drivingLicenseImages:{
+                frontUrl: doc.drivingLicenseImages.frontUrl,
+                backUrl: doc.drivingLicenseImages.backUrl,
+
+            },
             createdAt: doc.createdAt,
             updatedAt: doc.updatedAt,
             lastLoginAt: doc.lastLoginAt,
             token: doc.token
-
-            
-
 
         }
 
         res.status(202).send({ driver }); //Login Accepted
     })
     .catch(e => {
-
         res.status(500).send({ message: e.message }); //Internal Server Error
     })
     
