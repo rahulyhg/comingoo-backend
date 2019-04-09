@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 const username = "comingoo";
-const password = "";
+const password = "comingoo123";
 const server = "cluster0-gznwz.mongodb.net";
 const database = "test";
 
@@ -20,8 +20,7 @@ const options = {
 
 mongoose.connect(mongoDB, options);
 mongoose.Promise = global.Promise;
-mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
-
+mongoose.set('useFindAndModify', false);
 
 module.exports = mongoose;
