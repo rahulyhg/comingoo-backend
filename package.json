@@ -1,7 +1,7 @@
 {
   "name": "test-implementation",
   "version": "1.0.0",
-  "description": "",
+  "description": "MongoDB passward is not included. To run the program locally get password and add to config->db.js->paste in the password field",
   "main": "server.js",
   "scripts": {
     "start": "node server",
@@ -15,7 +15,7 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.4.21",
+    "mongoose": "^5.5.0",
     "socket.io": "^2.2.0",
     "swagger-jsdoc": "^3.2.8"
   },
@@ -25,5 +25,13 @@
   },
   "devDependencies": {
     "nodemon": "^1.18.10"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comingoo/comingoo-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/comingoo/comingoo-backend/issues"
+  },
+  "homepage": "https://github.com/comingoo/comingoo-backend#readme"
 }

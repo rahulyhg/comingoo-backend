@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const hashPassword = require('../../helpers/passwordHashing');
 
 
 
@@ -25,21 +26,44 @@ router.post('/addRider', async (req, res) => {
 // POST REGISTER RIDER
 router.post('/registerRider', async (req, res) => {
 
-  const checkUser = await RiderModel.find({ email: req.body.email });
-  if (checkUser.length) {
-      res.status(404).send({ message: "User already exists!" });
+    const user = req.body;
+
+    if (!validateEmail(user.email)) {
+        res.status(404).send({ message: "Email is not valid!" });
+        return;
+    }
+
+  const checkRider = await RiderModel.find({ email: user.email });
+  if (checkRider.length) {
+      res.status(404).send({ message: "Rider email already exists!" });
       return;
   }
 
+  if(user.phone){
+    const checkRiderByPhone = await RiderModel.find({ phone: user.phone });
+    if (checkRiderByPhone.length) {
+        res.status(404).send({ message: "Rider phone already exists!" });
+        return;
+    }
+  }
 
-  const user = req.body;
-  //const hash = hashPassword(user.password);
-  const hash = "dummy";
 
-  const newUser = new RiderModel({ name: user.name, email: user.email, password: hash });
+  const rider = req.body;
+  //const hash = hashPassword(rider.password);
+  //const hash = "dummy";
+
+  const new_rider = new RiderModel({ 
+      full_name: rider.full_name,
+      email: rider.email,
+      phone: rider.phone,
+      gender: rider.gender,
+      profile_picture_url: rider.profile_picture_url,
+      fb_access_token: rider.fb_access_token
+
+    });
   try {
-      await newUser.save();
-      res.status(201).send({ message: "User registered successfully!" });
+      await new_rider.save();
+      res.status(201).send({ message: "Rider registered successfully!" });
   } catch (e) {
       res.status(500).send({ message: e.message });
   }
@@ -74,7 +98,7 @@ router.post('/loginRider', async (req, res) => {
 
 
 //GET ALL RIDERS
-router.get('/getAllriders', async (req, res) => {
+router.get('/getAllRiders', async (req, res) => {
     try {
         const users = await RiderModel.find({})
         res.send(users);
@@ -83,6 +107,11 @@ router.get('/getAllriders', async (req, res) => {
     }
 })
 
+
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
 
 
 module.exports = router;
