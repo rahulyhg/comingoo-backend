@@ -4,9 +4,11 @@ const bodyParser = require("body-parser");
 const socketIO = require('socket.io');
 const http = require('http');
 const router = require('./routes/index');
+const swagger = require('./swagger');
 
 
 const app = express();
+app.use(express.static(__dirname + '/public'));
 
 
 app.use(bodyParser.json());
@@ -21,7 +23,7 @@ db.once('open', function () {
     console.log("db connected!")
 });
 
-
+new swagger(app) ;
 
 //default port 3030
 const PORT = process.env.PORT || 3030 ;
