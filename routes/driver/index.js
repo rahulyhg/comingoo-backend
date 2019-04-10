@@ -50,6 +50,10 @@ router.post('/registerDriver', async (req, res) => {
                 frontUrl: user.drivingLicenseImages.frontUrl,
                 backUrl: user.drivingLicenseImages.backUrl,
 
+            },
+            vehicalRegistrationImages:{
+                frontUrl: user.vehicalRegistrationImages.frontUrl,
+                backUrl: user.vehicalRegistrationImages.backUrl
             }
     
          });
@@ -121,23 +125,27 @@ router.post('/loginDriver', async (req, res) => {
             city: doc.city,
             bank:{
                 name: doc.bank.name,
-                accountNumber: doc.bank.accountNumber,
+                accountNumber: doc.bank.accountNumber
             },
             car:{
                 brand: doc.car.brand,
                 model: doc.car.model,
                 color: doc.car.color,
                 yearOfRelease: doc.car.yearOfRelease,
-                licensePlateNumber: doc.car.licensePlateNumber,
+                licensePlateNumber: doc.car.licensePlateNumber
             },
             idCardImages:{
                 frontUrl: doc.idCardImages.frontUrl,
-                backUrl: doc.idCardImages.backUrl,
+                backUrl: doc.idCardImages.backUrl
             },
             drivingLicenseImages:{
                 frontUrl: doc.drivingLicenseImages.frontUrl,
-                backUrl: doc.drivingLicenseImages.backUrl,
+                backUrl: doc.drivingLicenseImages.backUrl
 
+            },
+            vehicalRegistrationImages:{
+                frontUrl: doc.vehicalRegistrationImages.frontUrl,
+                backUrl: doc.vehicalRegistrationImages.backUrl
             },
             createdAt: doc.createdAt,
             updatedAt: doc.updatedAt,

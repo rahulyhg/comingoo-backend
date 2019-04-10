@@ -77,6 +77,17 @@ const DriverSchema = new mongoose.Schema({
         }
 
     },
+    vehicalRegistrationImages:{
+        frontUrl: {
+            type: String,
+            required: [true , 'Vehical registration certificate front image is required']
+        },
+        backUrl: {
+            type: String,
+            required: [true , 'Vehical registration certificate back image is required']
+        }
+
+    },
     
     
     createdAt: {
