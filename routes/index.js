@@ -3,20 +3,178 @@ const router = express.Router();
 /**
  * @swagger
  * definition:
- *   driver:
+ *   Driver:
  *     properties:
- *       name:
+ *       phoneNumber:
  *         type: string
- *       email:
+ *         example: 0123456789 
+ *       fullName:
  *         type: string
+ *         example: Alex Paris
+ *       gender:
+ *         type: string
+ *         example: male 
  *       password:
  *         type: string
- *   driver_login:
- *     properties:
- *       email:
+ *       city:
  *         type: string
- *       password:
+ *         example: Dhaka 
+ *       bank:
+ *         type: object
+ *         properties:
+ *            name:
+ *               type: string
+ *               example: World Bank
+ *            accountNumber:
+ *                type: integer
+ *                format: int64
+ *                example: 1234567890 
+ *       car:
+ *          type: object
+ *          properties:
+ *             brand:
+ *                type: string
+ *                example: BMW
+ *             model:
+ *                type: string
+ *                example: X1
+ *             color:
+ *                type: string
+ *                example: red
+ *             yearOfRelease:
+ *                type: integer
+ *                format: int64
+ *                example: 2019
+ *             licensePlateNumber:
+ *                type: string
+ *                example: 123-456-789
+ *       idCardImages:
+ *          type: object
+ *          properties:
+ *              frontUrl:
+ *                  type: string
+ *                  example: test.com
+ *              backUrl:
+ *                  type: string
+ *                  example: test.com
+ *       drivingLicenseImages:
+ *          type: object
+ *          properties:
+ *              frontUrl:
+ *                  type: string
+ *                  example: test.com
+ *              backUrl:
+ *                  type: string
+ *                  example: test.com
+ *       vehicalRegistrationImages:
+ *          type: object
+ *          properties:
+ *              frontUrl:
+ *                  type: string
+ *                  example: test.com
+ *              backUrl:
+ *                  type: string
+ *                  example: test.com 
+ *   
+ *        
+ * 
+ * 
+ *   driver_login_request:
+ *      type: object
+ *      properties:
+ *         phoneNumber:
+ *           type: string
+ *           example: 0123456789 
+ *         password:
+ *           type: string
+ *           example: kajnxkNAKJCXNwncdkn
+ * 
+ *   driver_login_response:
+ *      type: object
+ *      properties:
+ *       phoneNumber:
  *         type: string
+ *         example: 0123456789 
+ *       fullName:
+ *         type: string
+ *         example: Alex Paris
+ *       gender:
+ *         type: string
+ *         example: male 
+ *       city:
+ *         type: string
+ *         example: Dhaka 
+ *       bank:
+ *         type: object
+ *         properties:
+ *            name:
+ *               type: string
+ *               example: World Bank
+ *            accountNumber:
+ *                type: integer
+ *                format: int64
+ *                example: 1234567890 
+ *       car:
+ *          type: object
+ *          properties:
+ *             brand:
+ *                type: string
+ *                example: BMW
+ *             model:
+ *                type: string
+ *                example: X1
+ *             color:
+ *                type: string
+ *                example: red
+ *             yearOfRelease:
+ *                type: integer
+ *                format: int64
+ *                example: 2019
+ *             licensePlateNumber:
+ *                type: string
+ *                example: 123-456-789
+ *       idCardImages:
+ *          type: object
+ *          properties:
+ *              frontUrl:
+ *                  type: string
+ *                  example: test.com
+ *              backUrl:
+ *                  type: string
+ *                  example: test.com
+ *       drivingLicenseImages:
+ *          type: object
+ *          properties:
+ *              frontUrl:
+ *                  type: string
+ *                  example: test.com
+ *              backUrl:
+ *                  type: string
+ *                  example: test.com
+ *       vehicalRegistrationImages:
+ *          type: object
+ *          properties:
+ *              frontUrl:
+ *                  type: string
+ *                  example: test.com
+ *              backUrl:
+ *                  type: string
+ *                  example: test.com
+ *       createdAt:
+ *          type: string
+ *          example: 2019-04-10T15:31:28.732Z
+ *       updatedAt:
+ *          type: string
+ *          example: 2019-04-10T15:31:28.732Z
+ *       lastLoginAt:
+ *          type: string
+ *          example: 2019-04-10T15:31:28.732Z
+ *       token:
+ *          type: string
+ *          example: eyJhbGciOiJIUODkwfSwiY2FyIjp7ImJyYW5kIZXN0LmNvW5zZUltYWPV3QQZuTd3ciEzvNPDZb
+ * 
+ * 
+ * 
  *   auth_token:
  *     properties:
  *       token:
@@ -35,38 +193,30 @@ const router = express.Router();
  *         type: string
  *       password:
  *         type: string
+ *   driver-registration-success:
+ *      type: string
+ *      example: Driver registration was successful!
+ *   driver-registration-Conflict:
+ *      type: string
+ *      example: Phone number or license plate number already exists!
+ *   driver-registration-server-error:
+ *      type: string
+ *      example: You will get the error messege in return
+ *   driver-login-error-user:
+ *      type: string
+ *      example: User not found!
+ *   driver-login-error-password:
+ *      type: string
+ *      example: Incorrect Email/Password!
  */
 
-/**
+/** 
  * @swagger
- * /api/drivers/addDriver:
- *   post:
- *     tags:
- *       - Add drivers
- *     description: Admin will add driver information
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: Driver Info
- *         description: driver info object
- *         in: body
- *         required: true
- *         schema:
- *           $ref: '#/definitions/driver'
- *     responses:
- *       201:
- *         description: An json object of driver information
- *         schema:
- *           $ref: '#/definitions/driver'
- */
-
- /**
- * @swagger
- * /api/drivers/registerDriver:
+ * /drivers/registerDriver:
  *   post:
  *     tags:
  *       - Register drivers
- *     description: Driver will register their account
+ *     description: Driver will register their account. Duplicate phone number and license plate number will be rejected 
  *     produces:
  *       - application/json
  *     parameters:
@@ -75,17 +225,25 @@ const router = express.Router();
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/definitions/driver'
+ *           $ref: '#/definitions/Driver'
  *     responses:
  *       201:
- *         description: An json object of driver information
+ *         description: A success message
  *         schema:
- *           $ref: '#/definitions/driver'
+ *           $ref: '#/definitions/driver-registration-success'
+ *       409:
+ *         description: Conflits with existing user
+ *         schema:
+ *           $ref: '#/definitions/driver-registration-Conflict'
+ *       500:
+ *         description: Server failure
+ *         schema:
+ *           $ref: '#/definitions/driver-registration-server-error'
  */
 
 /**
  * @swagger
- * /api/drivers/loginDriver:
+ * /drivers/loginDriver:
  *   post:
  *     tags:
  *       - Login driver
@@ -98,12 +256,23 @@ const router = express.Router();
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/definitions/driver_login'
+ *           $ref: '#/definitions/driver_login_request'
  *     responses:
  *       200:
- *         description: An token
+ *         description: Driver info with a token
  *         schema:
- *           $ref: '#/definitions/auth_token'
+ *           $ref: '#/definitions/driver_login_response'
+ *       500:
+ *         description: Server failure
+ *         schema:
+ *           $ref: '#/definitions/driver-registration-server-error'
+ *       404:
+ *         description: User not found
+ *         schema:
+ *           $ref: '#/definitions/driver-login-error-user'
+ *       401:
+ *         schema:
+ *           $ref: '#/definitions/driver-login-error-password'
  */
 
  /**
@@ -121,30 +290,6 @@ const router = express.Router();
  *         schema:
  *           $ref: '#/definitions/driver'
  */
-
- /**
- * @swagger
- * /api/riders/addRider:
- *   post:
- *     tags:
- *       - Add riders
- *     description: Admin will add rider information
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: Rider Info
- *         description: rider info object
- *         in: body
- *         required: true
- *         schema:
- *           $ref: '#/definitions/rider'
- *     responses:
- *       201:
- *         description: An json object of rider information
- *         schema:
- *           $ref: '#/definitions/rider'
- */
-
 
   /**
  * @swagger
