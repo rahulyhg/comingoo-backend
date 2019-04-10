@@ -23,50 +23,73 @@ const DriverSchema = new mongoose.Schema({
         type: String,
         required: [true , 'City is required']
     },
-    bankAccountNumber: {
-        type: Number,
-        required: [true , 'Bank account number is required']
+    bank:{
+        name: {
+            type: String,
+            required: [true , 'Bank Name is required']
+        },
+        accountNumber: {
+            type: Number,
+            required: [true , 'Bank account number is required']
+        }   
     },
-    BankName: {
-        type: String,
-        required: [true , 'Bank Name is required']
+    car:{
+        brand: {
+            type: String,
+            required: [true , 'Car Brand is required']
+        },
+        model: {
+            type: String,
+            required: [true , 'Car model is required']
+        },
+        color: {
+            type: String,
+            required: [true , 'Car color is required']
+        },
+        yearOfRelease: {
+            type: Number,
+            required: [true , 'Car year of release is required ']
+        },
+        licensePlateNumber: {
+            type: String,
+            required: [true , 'Car license plate number is required']
+        },
     },
-    carBrand: {
-        type: String,
-        required: [true , 'Car Brand is required']
+    idCardImages:{
+        frontUrl: {
+            type: String,
+            required: [true , 'Identity Card front image is required']
+        },
+        backUrl: {
+            type: String,
+            required: [true , 'Identity Card back image is required']
+        }
+
     },
-    carModel: {
-        type: String,
-        required: [true , 'Car model is required']
+    drivingLicenseImages:{
+        frontUrl: {
+            type: String,
+            required: [true , 'Driving License front image is required']
+        },
+        backUrl: {
+            type: String,
+            required: [true , 'Driving License back image is required']
+        }
+
     },
-    carColor: {
-        type: String,
-        required: [true , 'Car color is required']
+    vehicalRegistrationImages:{
+        frontUrl: {
+            type: String,
+            required: [true , 'Vehical registration certificate front image is required']
+        },
+        backUrl: {
+            type: String,
+            required: [true , 'Vehical registration certificate back image is required']
+        }
+
     },
-    yearOfRelease: {
-        type: Number,
-        required: [true , 'Phone Number is required ']
-    },
-    licensePlateNumber: {
-        type: String,
-        required: [true , 'Phone Number is required']
-    },
-    identityCardImageFrontURL: {
-        type: String,
-        required: [true , 'Identity Card front image is required']
-    },
-    identityCardImageBackURL: {
-        type: String,
-        required: [true , 'Identity Card back image is required']
-    },
-    drivingLicenseImageFrontURL: {
-        type: String,
-        required: [true , 'Driving License front image is required']
-    },
-    drivingLicenseImageBackURL: {
-        type: String,
-        required: [true , 'Driving License back image is required']
-    },
+    
+    
     createdAt: {
         type: Date,
         default: Date.now,

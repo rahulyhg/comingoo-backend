@@ -1,15 +1,13 @@
 var mongoose = require('mongoose');
 
 const username = "comingoo";
-const password = "";
+const password = "comingoo123";
 const server = "cluster0-gznwz.mongodb.net";
 const database = "test";
 
 
 
 const dev_db_url = `mongodb+srv://${username}:${password}@${server}/${database}?retryWrites=true`;
-
-
 
 
 const mongoDB = process.env.MONGODB_URI || dev_db_url;
