@@ -74,24 +74,66 @@ router.post('/registerRider', async (req, res) => {
 
 //POST LOGIN RIDER
 router.post('/loginRider', async (req, res) => {
-  //Check Email
-  const user = await RiderModel.find({ email: req.body.email });
+    const rider;
+    const username = req.body.username;
+    if(validateEmail(username)){
+        //Check Email,facebook login
+        rider = await RiderModel.findOne({ email: username });
+        if (rider == null) {
+            res.status(404).send({ message: "Rider email not found!" });
+            return;
+        }
+    }
+    else if(validatePhone(username)){
+        //Check Phone
+        rider = await RiderModel.findOne({ phone: username });
+        if (rider == null) {
+            res.status(404).send({ message: "Rider phone not found!" });
+            return;
+        }
+    }
+    else{
+        res.status(404).send({ message: "Rider login bad request!" });
+            return;
+    }
 
-  if (!user.length) {
-      res.status(404).send({ message: "User not found!" });
-      return;
-  }
+    const passwordMatched = bcrypt.compareSync(req.body.password, rider.password);
 
-  const passwordMatched = bcrypt.compareSync(req.body.password, user.password);
+    if (!passwordMatched) {
+        res.status(401).send({ message: "Incorrect Email/Password!" }); // Unauthorized
+        return;
+    }
 
-  if (!passwordMatched) {
-      res.status(404).send({ message: "Incorrect Email/Password!" });
-      return;
-  }
+    //Generate Token
+    const token = jwt.sign({ user: rider }, 'anySecretKey');
+    res.status(200).send({ token });
 
-  //Generate Token
-  const token = jwt.sign({ user: user }, 'anySecretKey');
-  res.status(200).send({ token });
+    RiderModel.findOneAndUpdate({
+        phone: rider.phone},{ 
+        $set:{v: Date.now() , phone: Date.now() , fb_access_token: token  }}, 
+        { multi: true , new: true},
+        (err, doc) => {
+
+        if (err) {
+
+            res.status(500).send({ message: err.message }); //Internal Server Error
+        }
+
+        res.status(202).send({ 
+            full_name: doc.phoneNumber, 
+            email: doc.fullName,
+            phone: doc.phone,
+            gender: doc.gender,
+            profile_picture_url: doc.profile_picture_url,
+            created_at: doc.created_at,
+            updated_at: doc.updated_at,
+            last_login_at: doc.last_login_at,
+            fb_access_token: doc.token
+         }); //Login Accepted
+    })
+    .catch(e => {
+        res.status(500).send({ message: e.message }); //Internal Server Error
+    })
 })
 
 
@@ -111,6 +153,11 @@ router.get('/getAllRiders', async (req, res) => {
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
+}
+
+function validatePhone(phone) {
+    var re = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
+    return re.test(String(phone).toLowerCase());
 }
 
 
