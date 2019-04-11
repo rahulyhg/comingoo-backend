@@ -26,7 +26,7 @@ router.post('/registerRider', async (req, res) => {
       if(validatePhone(user.phone)){
         const checkRiderByPhone = await RiderModel.find({ phone: user.phone });
         if (checkRiderByPhone.length) {
-            res.status(404).send({ message: "Rider phone already exists!" });
+            res.status(404).send({ message: "Rider phone number already exists!" });
             return;
         }
       }else{
@@ -38,8 +38,6 @@ router.post('/registerRider', async (req, res) => {
 
 
   const rider = req.body;
-  //const hash = hashPassword(rider.password);
-  //const hash = "dummy";
 
   const new_rider = new RiderModel({ 
       full_name: rider.full_name,
@@ -132,7 +130,7 @@ router.post('/loginRider', async (req, res) => {
 
 
 
-//GET ALL RIDERS
+//GET ALL RIDERS API
 router.get('/getAllRiders', async (req, res) => {
     try {
         const users = await RiderModel.find({})
