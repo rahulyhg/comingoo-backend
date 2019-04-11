@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 const username = "comingoo";
-const password = "";
+const password = "comingoo123";
 const server = "cluster0-gznwz.mongodb.net";
 const database = "test";
 
