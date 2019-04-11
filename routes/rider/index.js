@@ -55,7 +55,7 @@ router.post('/registerRider', async (req, res) => {
 
 
   const rider = req.body;
-  const hash = hashPassword(rider.password);
+  //const hash = hashPassword(rider.password);
   //const hash = "dummy";
 
   const new_rider = new RiderModel({ 
@@ -65,7 +65,6 @@ router.post('/registerRider', async (req, res) => {
       gender: rider.gender,
       profile_picture_url: rider.profile_picture_url,
       fb_access_token: rider.fb_access_token,
-      password : hash
 
     });
   try {
@@ -108,15 +107,8 @@ router.post('/loginRider', async (req, res) => {
         
     }
     else{
-        res.status(404).send({ message: "Rider login bad request!" });
+        res.status(400).send({ message: "Rider login bad request!" });
             return;
-    }
-
-    const passwordMatched = bcrypt.compareSync(req.body.password, rider.password);
-
-    if (!passwordMatched) {
-        res.status(401).send({ message: "Incorrect Password!" }); // Unauthorized
-        return;
     }
 
     //Generate Token

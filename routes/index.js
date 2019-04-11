@@ -204,14 +204,9 @@ const router = express.Router();
  *       auth_token:
  *         type: string
  *         nullable: false
- *       password:
- *         type: string
- *         nullable: false
  *   rider_login:
  *     properties:
  *       username:
- *         type: string
- *       password:
  *         type: string
  *   rider_login_response:
  *     properties:
