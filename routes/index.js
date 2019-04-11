@@ -182,12 +182,26 @@ const router = express.Router();
  *         type: string
  *   rider:
  *     properties:
- *       name:
+ *       full_name:
  *         type: string
+ *         nullable: false
+ *         example: Mr. Ali Ahmed
  *       email:
  *         type: string
- *       password:
+ *         nullable: false
+ *         format: email
+ *       phone:
  *         type: string
+ *         nullable: false
+ *       gender:
+ *         type: string
+ *         nullable: false
+ *       profile_picture_url:
+ *         type: string
+ *         nullable: false
+ *       fb_access_token:
+ *         type: string
+ *         nullable: false
  *   rider_login:
  *     properties:
  *       email:
@@ -310,9 +324,7 @@ const router = express.Router();
  *           $ref: '#/definitions/rider'
  *     responses:
  *       201:
- *         description: An json object of rider information
- *         schema:
- *           $ref: '#/definitions/rider'
+ *         description: Rider registered successfully!
  */
 
 /**
@@ -340,7 +352,7 @@ const router = express.Router();
 
  /**
  * @swagger
- * /api/riders/getAllriders:
+ * /api/riders/getAllRiders:
  *   get:
  *     tags:
  *       - Get all riders information
@@ -356,6 +368,6 @@ const router = express.Router();
 
 
 router.use("/drivers", require("./driver"));
-router.use("/riders", require("./rider"));
+router.use("/api/riders", require("./rider"));
 
 module.exports = router;
