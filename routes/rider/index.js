@@ -3,23 +3,6 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const hashPassword = require('../../helpers/passwordHashing');
-
-
-
-
-// POST ADD
-router.post('/addRider', async (req, res) => {
-    console.log(req.body);
-    try {
-        const user = new RiderModel(req.body);
-
-        await user.save();
-        res.status(201).send({ message: "User successfully inserted!" })
-    } catch (e) {
-        res.status(500).send({ message: e })
-    }
-})
 
 
 
