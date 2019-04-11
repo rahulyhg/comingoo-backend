@@ -201,11 +201,45 @@ const router = express.Router();
  *       fb_access_token:
  *         type: string
  *         nullable: false
+ *       auth_token:
+ *         type: string
+ *         nullable: false
+ *       password:
+ *         type: string
+ *         nullable: false
  *   rider_login:
  *     properties:
- *       email:
+ *       username:
  *         type: string
  *       password:
+ *         type: string
+ *   rider_login_response:
+ *     properties:
+ *       id:
+ *         type: string
+ *       full_name:
+ *         type: string
+ *       email:
+ *         type: string
+ *       phone:
+ *         type: string
+ *       gender:
+ *         type: string
+ *       profile_picture_url:
+ *         type: string
+ *       created_at:
+ *         type: string
+ *         format: date-time
+ *         example: 1995-09-07T10:40:52Z
+ *       updated_at:
+ *         type: string
+ *         format: date-time
+ *         example: 1995-09-07T10:40:52Z
+ *       last_login_at:
+ *         type: string
+ *         format: date-time
+ *         example: 1995-09-07T10:40:52Z
+ *       auth_token:
  *         type: string
  *   driver-registration-success:
  *      type: string
@@ -332,21 +366,21 @@ const router = express.Router();
  *   post:
  *     tags:
  *       - Login rider
- *     description: Rider will login their account
+ *     description: Rider will login their account. 
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: Rider Info
- *         description: rider info object
+ *         description: Here username may be a email or phone number.
  *         in: body
  *         required: true
  *         schema:
  *           $ref: '#/definitions/rider_login'
  *     responses:
  *       200:
- *         description: An token
+ *         description: Logged-in user information with new auth token
  *         schema:
- *           $ref: '#/definitions/auth_token'
+ *           $ref: '#/definitions/rider_login_response'
  */
 
  /**

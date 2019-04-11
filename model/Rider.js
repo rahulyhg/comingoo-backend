@@ -30,6 +30,10 @@ const RiderSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    auth_token: {
+        type: String,
+        required: false,
+    },
     last_login_at: {
         type: Date,
         default: Date.now
