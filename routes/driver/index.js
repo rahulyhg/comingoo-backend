@@ -159,6 +159,35 @@ router.post('/loginDriver', async (req, res) => {
     
 })
 
+router.post('/passwordReset', async (req, res) => {
+    //Check Phone
+   
+    const user = req.body;
+
+    bcrypt.hash(user.password, saltRounds)   //Asyn password hashing
+    .then(hash => {
+        
+      DriverModel.findOneAndUpdate({
+        phoneNumber: user.phoneNumber},{ 
+        $set:{updatedAt: Date.now()},   password : hash  }, 
+        { multi: true , new: true},
+        (err, doc) => {
+
+        if (err) {
+            res.status(404).send({ message: "User not found!" });  //Not Found
+            return;
+        }
+
+        res.status(201).send({message: "Password reset was successful!"}); 
+    })
+    .catch(e => {
+        res.status(500).send({ message: e.message }); //Internal Server Error
+    });
+
+    
+})
+
+})
 
 
 //------------------------------------------------------------------------------------------------------------------------
