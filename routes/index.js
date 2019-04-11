@@ -16,6 +16,7 @@ const router = express.Router();
  *         example: male 
  *       password:
  *         type: string
+ *         example: kacsjnKNIniuAUN
  *       city:
  *         type: string
  *         example: Dhaka 
@@ -352,6 +353,7 @@ const router = express.Router();
  *         schema:
  *           $ref: '#/definitions/rider'
  */
+
 
 router.use("/drivers", require("./driver"));
 router.use("/riders", require("./rider"));

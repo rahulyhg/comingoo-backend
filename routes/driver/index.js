@@ -22,6 +22,8 @@ router.post('/registerDriver', async (req, res) => {
 
     const user = req.body;
 
+    
+
     bcrypt.hash(user.password, saltRounds)   //Asyn password hashing
     .then(hash => {
 
@@ -113,7 +115,7 @@ router.post('/loginDriver', async (req, res) => {
         { multi: true , new: true},
         (err, doc) => {
 
-        if (err) {
+        if (err || doc === null) {
 
             res.status(500).send({ message: err.message }); //Internal Server Error
         }
@@ -159,6 +161,39 @@ router.post('/loginDriver', async (req, res) => {
     
 })
 
+router.post('/passwordReset', async (req, res) => {
+    //Check Phone
+   
+    const user = req.body;
+
+    bcrypt.hash(user.password, saltRounds)   //Asyn password hashing
+    .then(hash => {
+        
+      DriverModel.findOneAndUpdate({
+        phoneNumber: user.phoneNumber},{ 
+        $set:{updatedAt: Date.now()},   password : hash  }, 
+        { multi: true , new : true},
+        (err, doc) => {
+
+        if (err || doc === null ) {
+            res.status(404).send({ message: "User not found!" });  //Not Found
+            return;
+        }
+        else{
+            res.status(201).send({message: "Password reset was successful!"});
+            console.log(doc)
+        }
+
+         
+    })
+    .catch(e => {
+        res.status(500).send({ message: e.message }); //Passwaord hashing error Error
+    });
+
+    
+})
+
+})
 
 
 //------------------------------------------------------------------------------------------------------------------------
