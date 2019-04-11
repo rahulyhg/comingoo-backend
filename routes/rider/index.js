@@ -40,11 +40,17 @@ router.post('/registerRider', async (req, res) => {
   }
 
   if(user.phone){
-    const checkRiderByPhone = await RiderModel.find({ phone: user.phone });
-    if (checkRiderByPhone.length) {
-        res.status(404).send({ message: "Rider phone already exists!" });
+      if(validatePhone(user.phone)){
+        const checkRiderByPhone = await RiderModel.find({ phone: user.phone });
+        if (checkRiderByPhone.length) {
+            res.status(404).send({ message: "Rider phone already exists!" });
+            return;
+        }
+      }else{
+        res.status(400).send({ message: "Invalid Phone Number!" });
         return;
-    }
+      }
+    
   }
 
 
@@ -58,7 +64,7 @@ router.post('/registerRider', async (req, res) => {
       phone: rider.phone,
       gender: rider.gender,
       profile_picture_url: rider.profile_picture_url,
-      fb_access_token: rider.fb_access_token
+      fb_access_token: rider.fb_access_token,
 
     });
   try {
@@ -74,24 +80,70 @@ router.post('/registerRider', async (req, res) => {
 
 //POST LOGIN RIDER
 router.post('/loginRider', async (req, res) => {
-  //Check Email
-  const user = await RiderModel.find({ email: req.body.email });
+    var rider = null;
+    const username = req.body.username;
+    
+    if(validateEmail(username)){
+        //Check Email,facebook login
+        rider = await RiderModel.findOne({ email: username });
+        if (rider == null) {
+            res.status(404).send({ message: "Rider email not found!" });
+            return;
+        }
+    }
+    else if(validatePhone(username)){
+        //Check Phone 
+        console.log(validatePhone(username));
+        try {
+            rider = await RiderModel.findOne({ phone: username });
+            if (rider == null) {
+                res.status(404).send({ message: "Rider phone not found!" });
+                return;
+            }
+        } catch (error) {
+            res.status(500).send({ message: error.message });
+                return;
+        }
+        
+    }
+    else{
+        res.status(400).send({ message: "Rider login bad request!" });
+            return;
+    }
 
-  if (!user.length) {
-      res.status(404).send({ message: "User not found!" });
-      return;
-  }
+    //Generate Token
+    const token = jwt.sign({ user: rider }, 'anySecretKey');
+    //res.status(200).send({ token });
 
-  const passwordMatched = bcrypt.compareSync(req.body.password, user.password);
+    console.log(token);
 
-  if (!passwordMatched) {
-      res.status(404).send({ message: "Incorrect Email/Password!" });
-      return;
-  }
+    RiderModel.findOneAndUpdate({
+        phone: rider.phone},{ 
+        $set:{last_login_at: Date.now(), auth_token: token  }}, 
+        { multi: true , new: true},
+        (err, doc) => {
 
-  //Generate Token
-  const token = jwt.sign({ user: user }, 'anySecretKey');
-  res.status(200).send({ token });
+        if (err) {
+
+            res.status(500).send({ message: err.message }); //Internal Server Error
+        }
+        console.log('doc: ',doc.auth_token);
+        res.status(202).send({ 
+            id: doc._id,
+            full_name: doc.full_name, 
+            email: doc.email,
+            phone: doc.phone,
+            gender: doc.gender,
+            profile_picture_url: doc.profile_picture_url,
+            created_at: doc.created_at,
+            updated_at: doc.updated_at,
+            last_login_at: doc.last_login_at,
+            auth_token: doc.auth_token
+         }); //Login Accepted
+    })
+    .catch(e => {
+        res.status(500).send({ message: e.message }); //Internal Server Error
+    })
 })
 
 
@@ -111,6 +163,11 @@ router.get('/getAllRiders', async (req, res) => {
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
+}
+
+function validatePhone(phone) {
+    var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+    return re.test(String(phone));
 }
 
 
