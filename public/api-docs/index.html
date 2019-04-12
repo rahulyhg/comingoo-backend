@@ -40,6 +40,9 @@
     if(hostUrl == '127.0.0.1'){
       hostUrl = "http://127.0.0.1:3030";
     }
+    else if(hostUrl == 'localhost'){
+      hostUrl = "http://localhost:3030";
+    }
     else{
       hostUrl = "http://"+hostUrl;
     }
