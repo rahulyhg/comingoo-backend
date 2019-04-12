@@ -20,14 +20,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-    console.log("db connected!")
+    console.log("db connected!");
+    
 });
 
 new swagger(app) ;
 
 //default port 3030
 const PORT = process.env.PORT || 3030 ;
-app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+app.listen(PORT, () =>{console.log(`Listening on ${ PORT }`) } );
 
 
 

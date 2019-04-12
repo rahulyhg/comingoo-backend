@@ -20,7 +20,7 @@ const RiderSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        required: true,
+        default: null
     },
     profile_picture_url: {
         type: String,

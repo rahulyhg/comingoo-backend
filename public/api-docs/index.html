@@ -37,6 +37,16 @@
     <script src="./swagger-ui-standalone-preset.js"> </script>
     <script>
     window.onload = function() {
+
+     /* const value = typeof process.env.HEROKU_URL === 'undefined';
+
+      if(!value){
+        var URL = `${process.env.HEROKU_URL}/swagger.json`;
+      }
+      else{
+        var URL = "http://localhost:3030/swagger.json";
+      }
+      */
       // Begin Swagger UI call region
       const ui = SwaggerUIBundle({
         url: "http://localhost:3030/swagger.json",

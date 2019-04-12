@@ -93,7 +93,7 @@ router.post('/loginDriver', async (req, res) => {
     //Check Phone
     const user = await DriverModel.findOne({ phoneNumber: req.body.phoneNumber });
 
-    if (user == null) {
+    if (user === null) {
         res.status(404).send({ message: "User not found!" });
         return;
     }

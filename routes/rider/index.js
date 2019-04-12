@@ -43,7 +43,7 @@ router.post('/registerRider', async (req, res) => {
       full_name: rider.full_name,
       email: rider.email,
       phone: rider.phone,
-      gender: rider.gender,
+      gender: rider.gender || null,
       profile_picture_url: rider.profile_picture_url,
       fb_access_token: rider.fb_access_token,
 
