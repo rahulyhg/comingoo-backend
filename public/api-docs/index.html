@@ -36,6 +36,14 @@
     <script src="./swagger-ui-bundle.js"> </script>
     <script src="./swagger-ui-standalone-preset.js"> </script>
     <script>
+    var hostUrl = window.location.hostname;
+    if(hostUrl == '127.0.0.1'){
+      hostUrl = "http://127.0.0.1:3030";
+    }
+    else{
+      hostUrl = "http://"+hostUrl;
+    }
+
     window.onload = function() {
 
      /* const value = typeof process.env.HEROKU_URL === 'undefined';
@@ -49,7 +57,7 @@
       */
       // Begin Swagger UI call region
       const ui = SwaggerUIBundle({
-        url: "https://comingoo-api.herokuapp.com/swagger.json",
+        url: hostUrl+"/swagger.json",
         dom_id: '#swagger-ui',
         deepLinking: true,
         presets: [

@@ -180,6 +180,7 @@ const router = express.Router();
  *     properties:
  *       token:
  *         type: string
+ *         example: eyJhbGciOiJIUODkwfSwiY2FyIjp7ImJyYW5kIZXN0LmNvW5zZUltYWPV3QQZuTd3ciEzvNPDZb
  *   rider:
  *     properties:
  *       full_name:
@@ -193,36 +194,48 @@ const router = express.Router();
  *       phone:
  *         type: string
  *         nullable: false
+ *         example: 01785342578
  *       gender:
  *         type: string
  *         nullable: false
+ *         example: Male
  *       profile_picture_url:
  *         type: string
  *         nullable: false
+ *         example: https://encrypted-tbn0.gstatic.com/images
  *       fb_access_token:
  *         type: string
  *         nullable: false
+ *         example: eyJhbGciOiJIUODkwfSwiY2FyIjp7ImJyYW5kIZXN0LmNvW5zZUltYWPV3QQZuTd3ciEzvNPDZb
  *       auth_token:
  *         type: string
  *         nullable: false
+ *         example: eyJhbGciOiJIUODkwfSwiY2FyIjp7ImJyYW5kIZXN0LmNvW5zZUltYWPV3QQZuTd3ciEzvNPDZb
  *   rider_login:
  *     properties:
  *       username:
  *         type: string
+ *         example: test@example.com(Email) or 1234567890(Phone)
  *   rider_login_response:
  *     properties:
  *       id:
  *         type: string
+ *         example: 5cad2babd3847225d4108e60
  *       full_name:
  *         type: string
+ *         example: Mr Andrew Ng
  *       email:
  *         type: string
+ *         example: example@example.com
  *       phone:
  *         type: string
+ *         example: 1234567890
  *       gender:
  *         type: string
+ *         example: Male
  *       profile_picture_url:
  *         type: string
+ *         example: https://encrypted-tbn0.gstatic.com/images
  *       created_at:
  *         type: string
  *         format: date-time
@@ -237,6 +250,7 @@ const router = express.Router();
  *         example: 1995-09-07T10:40:52Z
  *       auth_token:
  *         type: string
+ *         example: eyJhbGciOiJIUODkwfSwiY2FyIjp7ImJyYW5kIZXN0LmNvW5zZUltYWPV3QQZuTd3ciEzvNPDZb
  *   driver-registration-success:
  *      type: string
  *      example: Driver registration was successful!
@@ -354,6 +368,12 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Rider registered successfully!
+ *       404:
+ *         description: Email is not valid! / Rider email already exists! / Rider phone number already exists!
+ *       400:
+ *         description: Invalid Phone Number!
+ *       500:
+ *         description: Server failure
  */
 
 /**
@@ -377,6 +397,10 @@ const router = express.Router();
  *         description: Logged-in user information with new auth token
  *         schema:
  *           $ref: '#/definitions/rider_login_response'
+ *       404:
+ *         description: Rider email not found! / Rider phone not found!
+ *       500:
+ *         description: Server failure
  */
 
  /**

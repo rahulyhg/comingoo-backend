@@ -52,7 +52,7 @@ router.post('/registerRider', async (req, res) => {
       await new_rider.save();
       res.status(201).send({ message: "Rider registered successfully!" });
   } catch (e) {
-      res.status(500).send({ message: e.message });
+      res.status(500).send({ message: "Server failure" });
   }
 
 })
@@ -82,7 +82,7 @@ router.post('/loginRider', async (req, res) => {
                 return;
             }
         } catch (error) {
-            res.status(500).send({ message: error.message });
+            res.status(500).send({ message: "Server failure" });
                 return;
         }
         
